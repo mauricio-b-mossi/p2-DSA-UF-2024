@@ -63,14 +63,5 @@ void PageRank::printRank() {
   }
 }
 
-// Print in order
-void PageRank::printOutlinks() {
-  // Map returns in order.
-  for (auto el : webToVertexMapper) {
-    std::cout << el.first << " " << std::fixed << std::setprecision(2)
-              << outLinksPerWeb[el.second] << std::endl;
-  }
-}
-
 PageRank::PageRank(){};
 PageRank::~PageRank(){};

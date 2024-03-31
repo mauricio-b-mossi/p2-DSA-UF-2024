@@ -23,11 +23,9 @@ struct PageRank {
   // Initialized the rank of each website to 1/V.
   void setDefaultRank();
 
-  void printOutlinks();
 
 private:
   std::map<std::string, int> webToVertexMapper{};
-  std::map<int, std::string> vertexToWebMapper{};
   std::vector<int> outLinksPerWeb{}; // Value of webToVertexMapper matches index
   std::vector<float> rank{}; // Rank also matches index of webToVertexMapper
   AdjacencyList adjList;

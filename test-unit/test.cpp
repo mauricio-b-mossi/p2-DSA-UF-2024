@@ -2,7 +2,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 // change if you choose to use a different header name
-//#include ""
+// #include ""
 
 using namespace std;
 
@@ -40,15 +40,14 @@ TEST_CASE("Test 2", "[tag]") {
 }
 
 // you must write 5 unique, meaningful tests for extra credit on this project!
-//
-/*
+
 // See the following for an example of how to easily test your output.
 // This uses C++ "raw strings" and assumes your PageRank outputs a string with
 //   the same thing you print.
-TEST_CASE("Example PageRank Output Test", "[flag]"){
-    // the following is a "raw string" - you can write the exact input (without
-    //   any indentation!) and it should work as expected
-    string input = R"(7 2
+TEST_CASE("Example PageRank Output Test", "[flag]") {
+  // the following is a "raw string" - you can write the exact input (without
+  //   any indentation!) and it should work as expected
+  string input = R"(7 2
 google.com gmail.com
 google.com maps.com
 facebook.com ufl.edu
@@ -57,21 +56,20 @@ ufl.edu gmail.com
 maps.com facebook.com
 gmail.com maps.com)";
 
-    string expectedOutput = R"(facebook.com 0.20
+  string expectedOutput = R"(facebook.com 0.20
 gmail.com 0.20
 google.com 0.10
 maps.com 0.30
 ufl.edu 0.20
 )";
 
-    string actualOutput;
+  string actualOutput;
 
-    //somehow pass your input into your AdjacencyList and parse it to call the
-    //correct functions, for example:
-    // AdjacencyList g;
-    // g.parseInput(input)
-    // actualOutput = g.getStringRepresentation()
+  // somehow pass your input into your AdjacencyList and parse it to call the
+  // correct functions, for example:
+  //  AdjacencyList g;
+  //  g.parseInput(input)
+  //  actualOutput = g.getStringRepresentation()
 
-    REQUIRE(actualOutput == expectedOutput);
+  REQUIRE(actualOutput == expectedOutput);
 }
- */

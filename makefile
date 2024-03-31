@@ -19,8 +19,6 @@ iotest:
 	.\\build\\test_io < test-io\\input-files\\4.txt
 	.\\build\\test_io < test-io\\input-files\\5.txt
 
-
-
 clean:
 	del build\tests.exe
 

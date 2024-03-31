@@ -1,6 +1,7 @@
 #include "PageRank.hpp"
 #include <iomanip>
 #include <iostream>
+#include <vector>
 
 /* Here we:
     - insert edge to AdjacencyList.
@@ -38,10 +39,15 @@ void PageRank::setDefaultRank() {
 
 void PageRank::powerIterate(int n) {
   for (int l = 1; l < n; l++) {
+
+    float rankCopy[vertices]; // Took me a while to catch this.
+    for (int i = 0; i < vertices; i++)
+      rankCopy[i] = rank[i];
+
     for (int i = 0; i < vertices; i++) {
-      float temp = 0.f;
+      float temp = 0;
       for (auto inwardsVertex : adjList.getAdjacentVertices(i)) {
-        temp += rank[i] *
+        temp += rankCopy[inwardsVertex] *
                 (1.f / outLinksPerWeb[inwardsVertex]); // Had an i, big mistake.
       }
       rank[i] = temp;
@@ -49,7 +55,6 @@ void PageRank::powerIterate(int n) {
   }
 }
 
-// Print in order.
 void PageRank::printRank() {
   // Map returns in order.
   for (auto el : webToVertexMapper) {

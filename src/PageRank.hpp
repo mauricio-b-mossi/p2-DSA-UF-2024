@@ -27,6 +27,7 @@ struct PageRank {
 
 private:
   std::map<std::string, int> webToVertexMapper{};
+  std::map<int, std::string> vertexToWebMapper{};
   std::vector<int> outLinksPerWeb{}; // Value of webToVertexMapper matches index
   std::vector<float> rank{}; // Rank also matches index of webToVertexMapper
   AdjacencyList adjList;

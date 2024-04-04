@@ -1,6 +1,7 @@
 #include "PageRank.hpp"
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 /* Here we:
@@ -55,13 +56,16 @@ void PageRank::powerIterate(int n) {
   }
 }
 
-void PageRank::printRank() {
-  // Map returns in order.
+std::string PageRank::getRankString() {
+  std::stringstream buffer;
   for (auto el : webToVertexMapper) {
-    std::cout << el.first << " " << std::fixed << std::setprecision(2)
-              << rank[el.second] << std::endl;
+    buffer << el.first << " " << std::fixed << std::setprecision(2)
+           << rank[el.second] << std::endl;
   }
+  return buffer.str();
 }
+
+void PageRank::printRank() { std::cout << this->getRankString(); }
 
 PageRank::PageRank(){};
 PageRank::~PageRank(){};

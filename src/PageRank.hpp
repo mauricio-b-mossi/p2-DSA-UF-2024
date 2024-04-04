@@ -3,10 +3,16 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <string>
 
 /* Will perform insertion and mapping from website to integer here as
  * I will keep track of outgoing nodes to calculate the weigth. To perform
  * poweriterations I will perform a "dot product".
+ */
+
+/*
+ * Class encapsulates the behavior of the PageRank algorithm by internally using an 
+ * Adjacency List to store website graph.
  */
 struct PageRank {
 
@@ -22,6 +28,8 @@ struct PageRank {
 
   // Initialized the rank of each website to 1/V.
   void setDefaultRank();
+
+  std::string getRankString();
 
 
 private:

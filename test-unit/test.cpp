@@ -1,50 +1,16 @@
 #include <iostream>
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-// change if you choose to use a different header name
-// #include ""
+#include <sstream>
+
+#include "../src/PageRank.hpp"
 
 using namespace std;
-
-// the syntax for defining a test is below. It is important for the name to be
-// unique, but you can group multiple tests with [tags]. A test can have
-// [multiple][tags] using that syntax.
-TEST_CASE("Example Test Name - Change me!", "[tag]") {
-  // instantiate any class members that you need to test here
-  int one = 1;
-
-  // anything that evaluates to false in a REQUIRE block will result in a
-  // failing test
-  REQUIRE(one == 1); // fix me!
-
-  // all REQUIRE blocks must evaluate to true for the whole test to pass
-  REQUIRE(true); // also fix me!
-}
-
-TEST_CASE("Test 2", "[tag]") {
-  // you can also use "sections" to share setup code between tests, for example:
-  int one = 1;
-
-  SECTION("num is 2") {
-    int num = one + 1;
-    REQUIRE(num == 2);
-  };
-
-  SECTION("num is 3") {
-    int num = one + 2;
-    REQUIRE(num == 3);
-  };
-
-  // each section runs the setup code independently to ensure that they don't
-  // affect each other
-}
-
-// you must write 5 unique, meaningful tests for extra credit on this project!
 
 // See the following for an example of how to easily test your output.
 // This uses C++ "raw strings" and assumes your PageRank outputs a string with
 //   the same thing you print.
-TEST_CASE("Example PageRank Output Test", "[flag]") {
+TEST_CASE("Example PageRank Output Test", "[example]") {
   // the following is a "raw string" - you can write the exact input (without
   //   any indentation!) and it should work as expected
   string input = R"(7 2
@@ -63,13 +29,213 @@ maps.com 0.30
 ufl.edu 0.20
 )";
 
-  string actualOutput;
+  std::stringstream ss(input);
 
-  // somehow pass your input into your AdjacencyList and parse it to call the
-  // correct functions, for example:
-  //  AdjacencyList g;
-  //  g.parseInput(input)
-  //  actualOutput = g.getStringRepresentation()
+  PageRank pr;
 
-  REQUIRE(actualOutput == expectedOutput);
+  int no_of_lines, power_iterations;
+  string from, to;
+  ss >> no_of_lines;
+  ss >> power_iterations;
+  for (int i = 0; i < no_of_lines; i++) {
+    ss >> from;
+    ss >> to;
+    pr.insertEdge(from, to);
+  }
+
+  pr.setDefaultRank();
+
+  pr.powerIterate(power_iterations);
+
+  REQUIRE(pr.getRankString() == expectedOutput);
+}
+
+TEST_CASE("Correct initialization of rank", "[trivial]") {
+  string input = R"(7 1
+google.com gmail.com
+google.com maps.com
+facebook.com ufl.edu
+ufl.edu google.com
+ufl.edu gmail.com
+maps.com facebook.com
+gmail.com maps.com)";
+
+  string expectedOutput = R"(facebook.com 0.20
+gmail.com 0.20
+google.com 0.20
+maps.com 0.20
+ufl.edu 0.20
+)";
+
+  std::stringstream ss(input);
+
+  PageRank pr;
+
+  int no_of_lines, power_iterations;
+  string from, to;
+  ss >> no_of_lines;
+  ss >> power_iterations;
+  for (int i = 0; i < no_of_lines; i++) {
+    ss >> from;
+    ss >> to;
+    pr.insertEdge(from, to);
+  }
+
+  pr.setDefaultRank();
+
+  pr.powerIterate(power_iterations);
+
+  REQUIRE(pr.getRankString() == expectedOutput);
+}
+
+/* Diagonal matrix if E performed,
+ * for this case the Diagonal is 0
+ * since self linkage is not possible*.
+ * [0 0 1]     1*rank
+ * [1 0 0] ->  1*rank
+ * [0 1 0]     1*rank
+ */
+TEST_CASE("Diagonal Matrix Multiplication 1.", "[trivial]") {
+
+  string input = R"(7 1000
+google.com gmail.com
+gmail.com maps.com
+maps.com google.com)";
+
+  string expectedOutput = R"(gmail.com 0.33
+google.com 0.33
+maps.com 0.33
+)";
+
+  std::stringstream ss(input);
+
+  PageRank pr;
+
+  int no_of_lines, power_iterations;
+  string from, to;
+  ss >> no_of_lines;
+  ss >> power_iterations;
+  for (int i = 0; i < no_of_lines; i++) {
+    ss >> from;
+    ss >> to;
+    pr.insertEdge(from, to);
+  }
+
+  pr.setDefaultRank();
+
+  pr.powerIterate(power_iterations);
+
+  REQUIRE(pr.getRankString() == expectedOutput);
+}
+
+/* Diagonal matrix if E performed
+ * [0 0.5 0.5]     (0.5 + 0.5)*rank
+ * [0.5 0 0.5] ->  (0.5 + 0.5)*rank -> rank.
+ * [0.5 0.5 0]     (0.5 + 0.5)*rank
+ */
+TEST_CASE("Diagonal Matrix Multiplication 2.", "[trivial]") {
+
+  string input = R"(6 10000
+google.com gmail.com
+google.com maps.com
+gmail.com maps.com
+gmail.com google.com
+maps.com google.com
+maps.com gmail.com)";
+
+  string expectedOutput = R"(gmail.com 0.33
+google.com 0.33
+maps.com 0.33
+)";
+
+  std::stringstream ss(input);
+
+  PageRank pr;
+
+  int no_of_lines, power_iterations;
+  string from, to;
+  ss >> no_of_lines;
+  ss >> power_iterations;
+  for (int i = 0; i < no_of_lines; i++) {
+    ss >> from;
+    ss >> to;
+    pr.insertEdge(from, to);
+  }
+
+  pr.setDefaultRank();
+
+  pr.powerIterate(power_iterations);
+
+  REQUIRE(pr.getRankString() == expectedOutput);
+}
+
+TEST_CASE("Converging Page Rank", "[non-trivial]") {
+
+  string input = R"(7 10000
+google.com gmail.com
+google.com maps.com
+facebook.com ufl.edu
+ufl.edu google.com
+ufl.edu gmail.com
+maps.com facebook.com
+gmail.com maps.com)";
+
+  string expectedOutput = R"(facebook.com 0.24
+gmail.com 0.18
+google.com 0.12
+maps.com 0.24
+ufl.edu 0.24
+)";
+
+  std::stringstream ss(input);
+
+  PageRank pr;
+
+  int no_of_lines, power_iterations;
+  string from, to;
+  ss >> no_of_lines;
+  ss >> power_iterations;
+  for (int i = 0; i < no_of_lines; i++) {
+    ss >> from;
+    ss >> to;
+    pr.insertEdge(from, to);
+  }
+
+  pr.setDefaultRank();
+
+  pr.powerIterate(power_iterations);
+
+  REQUIRE(pr.getRankString() == expectedOutput);
+}
+
+TEST_CASE("Self Reference 1 Entity", "[trivial]") {
+
+  string input = R"(3 10000
+google.com google.com
+google.com google.com
+gmail.com google.com)";
+
+  string expectedOutput = R"(gmail.com 0.00
+google.com 1.00
+)";
+
+  std::stringstream ss(input);
+
+  PageRank pr;
+
+  int no_of_lines, power_iterations;
+  string from, to;
+  ss >> no_of_lines;
+  ss >> power_iterations;
+  for (int i = 0; i < no_of_lines; i++) {
+    ss >> from;
+    ss >> to;
+    pr.insertEdge(from, to);
+  }
+
+  pr.setDefaultRank();
+
+  pr.powerIterate(power_iterations);
+
+  REQUIRE(pr.getRankString() == expectedOutput);
 }

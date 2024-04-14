@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 /* Only need the insert and retriveAdjacent functionality
@@ -15,5 +15,5 @@ struct AdjacencyList {
   std::vector<int> getAdjacentVertices(int source);
 
 private:
-  std::map<int, std::vector<int>> mp{};
+  std::unordered_map<int, std::vector<int>> mp{};
 };
